@@ -4,12 +4,11 @@
   * test.html
 
 ### Config options 
-  * language (string) : language to display, 'en', 'ko' (default 'en')  
+  * language (string) : language to display, 'en', 'ko', 'jp', 'cn', 'ru' (default 'en')  
   * limit (number) : the number of disclosures to display, 1 ~ 50 (default 15)
   * newTagDuration (number) : duration for the new badge, 1 ~ 3 (default 1)
   * disclosureDuration (number) : duration for disclosure, 7 ~ 30 (default 7)
-  * scrollSpeed (string) : scrolling speed level, [fast:1 ~ slow:10] (default 4)
-  * tickerStyle (object) : style to apply to the 'xi-ticker' element, ex. {marginBottom: '12px'}
+  * scrollSpeed (string) : scrolling speed level, [slow:1 ~ fast:10] (default 4)
   * projectIds (string|array) : project Ids provided by xangle
   * projectSymbols (string|array) : project symbols, string is used to load a specific project.
   * darkMode (boolean)
