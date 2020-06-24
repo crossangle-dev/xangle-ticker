@@ -1,10 +1,7 @@
 # README #
 
-### HTML
-  * <div id="xi-ticker"></div>
-
-### Script 
-  * _XT_(function() {new window.XangleTicker(...config)})
+### DEMO
+  * test.html
 
 ### Config options 
   * language (string) : language to display, 'en', 'ko' (default 'en')  
