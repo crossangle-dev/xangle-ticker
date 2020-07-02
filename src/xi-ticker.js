@@ -1,7 +1,6 @@
 'use strict';
 
 var API_PATH = 'https://api.xangle.io/external/';
-// var API_PATH = 'http://127.0.0.1:5000/external/';
 
 (function(_h) {
 
@@ -24,13 +23,6 @@ var API_PATH = 'https://api.xangle.io/external/';
       scrollSpeed: 3,  // (slow) 1 ~ 5 (fast)
       projectSymbols: null, // array|string
       apiUrl: null,
-      ******* hidden default *********
-      projectIds: null, // array|string 
-      display: 'link', // link, menu
-      tickerStyle: null, // {'xt-layout': '1200px'}
-      tickerWidth: 1200,  // container and layout width (px)
-      tickerHeight: 42, // (px)
-      callback: null, // UI callback to receive a notify when happens event or error from ticker
       */
     };
     var DISCLOSURE_NUMBER = 0; // number of displaying disclosures
@@ -43,6 +35,7 @@ var API_PATH = 'https://api.xangle.io/external/';
       cn: {scheduled: '预订', amended: '更正', answered: '已回答', published: '公布'},
       jp: {scheduled: '予約', amended: '修正済み', answered: '回答済み', published: '公開'},
       ru: {scheduled: 'По расписанию', amended: 'оригинал', answered: 'Отвеченный', request: 'Запрос о раскрытии', published: 'раскрытие'},
+      id: {scheduled: 'Direncanakan', amended: 'Perubahan', answered: 'Terjawab', request: 'Permintaan untuk penyingkapan', published: 'Penyingkapan Data'},
     };
     var TRANSLATION_MAP = {
       en: {no_disclosures: function(n) {return 'No disclosures published in the last '.concat(n, ' days.')}, no_match: 'No disclosures matched the project'},
@@ -51,13 +44,11 @@ var API_PATH = 'https://api.xangle.io/external/';
     var ERR_CODE = {
       102: 'No available disclosures', 103: 'No support language', 301: 'Unsupported browser', 306: 'Unknown error'
     }
-    // const variables
     var DEVICE_WIDTH = document.documentElement.clientWidth; // initial width
     var MOBILE_DEVICE = /iPhone|iPod|Android/i.test(navigator.userAgent);
-    // var APPLE_DEVICE = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
     var UNSUPPORTED_BROWSER = /Trident|MSIE/i.test(navigator.userAgent);
     var DEFAULT_HEIGHT = 42, DEFAULT_PADDING = 12, HEADER_WIDTH = 115;
-    var SUPPORT_LANGUAGE = ['en', 'ko', 'jp', 'cn', 'ru'];
+    var SUPPORT_LANGUAGE = ['en', 'ko', 'jp', 'cn', 'ru', 'id'];
     var SPEED_FACTOR = {1: 30, 2: 40, 3: 60, 4: 100, 5: 200};
     var LAP_FACTOR = {2: 5, 3: 8, 4: 11, 5: 14, 10: 28, 15: 43};
 
@@ -103,6 +94,7 @@ var API_PATH = 'https://api.xangle.io/external/';
     var _applyConfig = function(args) {
       for (var key in args) { 
         if (key == 'language') _config[key] = !SUPPORT_LANGUAGE.includes(args['language']) ? 'en' : args['language'];
+        else if (key == 'mobileMode') MOBILE_DEVICE = args['mobileMode']
         else _config[key] = args[key];
       }
 
@@ -244,6 +236,7 @@ var API_PATH = 'https://api.xangle.io/external/';
         else if (items.length > 5) return items.slice(0, Math.min(5, count));
         return items.slice(0, count);
       }
+
       var result = _limit(items, limitation);
       DISCLOSURE_NUMBER = result.length;
       if (items.length == 0 || result.length == 0) {

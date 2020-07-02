@@ -16,7 +16,7 @@
   box-shadow: unset;
 }
 .xt-container.dark {
-  background-color: #000000;
+  background-color: #131721;
 }
 .xt-layout {
   display: grid;
@@ -27,12 +27,14 @@
   padding: 12px 0 12px 12px;
 }
 .xt-head.dark {
-  background-color: #ffffff;
-  opacity: 0.45;
+  background-color:#131721;
 }
 .xt-head > div {
   border-right: 1px solid #eeeeee;
   height: 18px;
+}
+.xt-head.dark > div  {
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 .xt-head .logo {
   width: 92px;
@@ -58,7 +60,7 @@
   background-image: linear-gradient(to right, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
 }
 .xt-tail .left-fade.dark {
-  background-image: unset;
+  background-image: linear-gradient(to right, #131721 0%, rgba(19, 23, 33, 0) 100%);
 }
 .xt-tail .right-fade {
   width: 48px;
@@ -68,7 +70,7 @@
   background-image: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
 }
 .xt-tail .right-fade.dark {
-  background-image: unset;
+  background-image: linear-gradient(to right, rgba(19, 23, 33, 0) 0%, #131721 100%);
 }
 .ticker-wrap {
   width: 100%;
@@ -110,7 +112,7 @@
   src: local("Apple SD Gothic Neo");
 }
 .ticker-item.dark {
-  color: #ffffff;
+  color: #ebeef3;
 }
 .ticker-item .boxer {
   display: flex;
@@ -123,7 +125,7 @@
   font-weight: normal;
 }
 .ticker-item .state.dark {
-  color: #ffffff;;
+  color: #8885ff;
 }
 .ticker-item .symbol {
   padding-right: 4px;
@@ -134,6 +136,9 @@
   width: 1px;
   height: 10px;
   border-right: 1px solid #dbe1ea;
+}
+.ticker-item.dark .divider  {
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 .ticker-item .content {
   margin-left: 4px;
