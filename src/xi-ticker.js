@@ -264,10 +264,10 @@ var API_PATH = 'https://api.xangle.io/external/';
 
     function hideFader() {
       var rightFade = __element__('right-fade');
-      rightFade && rightFade.classList.add('dark');
+      rightFade && rightFade.classList.add('hidden');
 
       var leftFade = __element__('left-fade');
-      leftFade && leftFade.classList.add('dark');
+      leftFade && leftFade.classList.add('hidden');
     }
 
     function playAnimation(state) {

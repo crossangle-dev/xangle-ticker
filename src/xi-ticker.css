@@ -59,6 +59,9 @@
   position: absolute;
   background-image: linear-gradient(to right, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
 }
+.xt-tail .left-fade.hidden {
+  background-image: unset;
+}
 .xt-tail .left-fade.dark {
   background-image: linear-gradient(to right, #131721 0%, rgba(19, 23, 33, 0) 100%);
 }
@@ -71,6 +74,9 @@
 }
 .xt-tail .right-fade.dark {
   background-image: linear-gradient(to right, rgba(19, 23, 33, 0) 0%, #131721 100%);
+}
+.xt-tail .right-fade.hidden {
+  background-image: unset;
 }
 .ticker-wrap {
   width: 100%;
