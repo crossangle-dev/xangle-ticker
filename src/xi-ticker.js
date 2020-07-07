@@ -30,7 +30,7 @@ var API_PATH = 'https://api.xangle.io/external/';
 
     // const data
     var STATE_MAP = {
-      en: {scheduled: 'Scheduled', amended: 'Admended', answered: 'Answered', request: 'Request for Disclosure', published: 'Disclosure'},
+      en: {scheduled: 'Scheduled', amended: 'Amended', answered: 'Answered', request: 'Request for Disclosure', published: 'Disclosure'},
       ko: {scheduled: '예약', amended: '정정', answered: '답변완료', request: '조회', published: '공시'},
       cn: {scheduled: '预订', amended: '更正', answered: '已回答', published: '公布'},
       jp: {scheduled: '予約', amended: '修正済み', answered: '回答済み', published: '公開'},
