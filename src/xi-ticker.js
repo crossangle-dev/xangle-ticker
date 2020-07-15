@@ -472,7 +472,7 @@ var API_PATH = 'https://api.xangle.io/external/';
       var layoutHTML = '';
       if (MOBILE_DEVICE) {
         var moveClass = "'ticker-move vertical" + (disclosures.length <= 1 ? '' : ' v-ticker-' + disclosures.length) + "'";
-        var logo = "<img class='logo' src='../res/images/favicon.svg'/>";
+        var logo = "<img class='logo' src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/favicon.svg'/>";
         layoutHTML = "<div class='xt-layout mobile'><div class='xt-head' target='_blank'>"+ logo +"</div><div class='xt-tail'><div class='ticker-wrap vertical'><div class="+ moveClass +">";
       } else {
         var logo = "<img class='logo' src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/ticker-logo" + (_config.darkMode ? '-dark.svg' : '.svg') + "'/>";
