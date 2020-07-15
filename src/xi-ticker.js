@@ -75,8 +75,9 @@ var API_PATH = 'https://api.xangle.io/external/';
         header = "<div class='xt-head' target='_blank'><img src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/favicon.svg'/>";
         layout = "<div class='xt-layout mobile'>" + header + "</div><div class='xt-tail'></div></div>";
       } else {
-        header = "<div class='xt-head' target='_blank'><div><img src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/ticker-logo.svg'/>"; 
-        layout = "<div class='xt-layout'>" + header + "</div></div><div class='xt-tail'></div></div>";
+        header = "<div class='xt-head' target='_blank'><div>"
+        var logo = "<img src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/ticker-logo.svg'/>" + (_config.darkMode ? '-dark.svg' : '.svg') + "'/>";; 
+        layout = "<div class='xt-layout'>" + header + logo + "</div></div><div class='xt-tail'></div></div>";
       }
       cn.innerHTML = layout;
     
@@ -323,7 +324,7 @@ var API_PATH = 'https://api.xangle.io/external/';
       if (width) { // config width
         _container.style.marginLeft = _container.style.marginRight = 'auto'
       } else { // window resizing
-        var parentWidth = window.getComputedStyle(_container.parentElement, null).getPropertyValue("width");
+        var parentWidth = window.getComputedStyle(_container.parentElement || document.documentElement, null).getPropertyValue("width");
         width = parseInt(parentWidth);
         DEVICE_WIDTH = document.documentElement.clientWidth;
       }
@@ -471,10 +472,10 @@ var API_PATH = 'https://api.xangle.io/external/';
       var layoutHTML = '';
       if (MOBILE_DEVICE) {
         var moveClass = "'ticker-move vertical" + (disclosures.length <= 1 ? '' : ' v-ticker-' + disclosures.length) + "'";
-        var logo = "<img class='logo' src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/favicon.svg'/>";
+        var logo = "<img class='logo' src='../res/images/favicon.svg'/>";
         layoutHTML = "<div class='xt-layout mobile'><div class='xt-head' target='_blank'>"+ logo +"</div><div class='xt-tail'><div class='ticker-wrap vertical'><div class="+ moveClass +">";
       } else {
-        var logo = "<img class='logo' src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/ticker-logo.svg'/>";
+        var logo = "<img class='logo' src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/ticker-logo" + (_config.darkMode ? '-dark.svg' : '.svg') + "'/>";
         layoutHTML = "<div class='xt-layout'><div class='xt-head' target='_blank'><div>"+ logo +"</div></div><div class='xt-tail'><span class='left-fade'></span><span class='right-fade'></span><div class='ticker-wrap fixed'><div class='ticker-move paused fixed desktop'>";
       }
   
