@@ -76,7 +76,7 @@ var API_PATH = 'https://api.xangle.io/external/';
         layout = "<div class='xt-layout mobile'>" + header + "</div><div class='xt-tail'></div></div>";
       } else {
         header = "<div class='xt-head' target='_blank'><div>"
-        var logo = "<img src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/ticker-logo.svg'/>" + (_config.darkMode ? '-dark.svg' : '.svg') + "'/>";; 
+        var logo = "<img src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/ticker-logo" + (_config.darkMode ? '-dark.svg' : '.svg') + "'/>";
         layout = "<div class='xt-layout'>" + header + logo + "</div></div><div class='xt-tail'></div></div>";
       }
       cn.innerHTML = layout;
