@@ -23,6 +23,7 @@ var API_PATH = 'https://api.xangle.io/external/';
       scrollSpeed: 3,  // (slow) 1 ~ 5 (fast)
       projectSymbols: null, // array|string
       apiUrl: null,
+      marketWatch: 'partial' // 'whole'
       */
     };
     var DISCLOSURE_NUMBER = 0; // number of displaying disclosures
@@ -30,12 +31,12 @@ var API_PATH = 'https://api.xangle.io/external/';
 
     // const data
     var STATE_MAP = {
-      en: {scheduled: 'Scheduled', amended: 'Amended', answered: 'Answered', request: 'Request for Disclosure', published: 'Disclosure'},
-      ko: {scheduled: '예약', amended: '정정', answered: '답변완료', request: '조회', published: '공시'},
-      cn: {scheduled: '预订', amended: '更正', answered: '已回答', published: '公布'},
-      jp: {scheduled: '予約', amended: '修正済み', answered: '回答済み', published: '公開'},
-      ru: {scheduled: 'По расписанию', amended: 'оригинал', answered: 'Отвеченный', request: 'Запрос о раскрытии', published: 'раскрытие'},
-      id: {scheduled: 'Direncanakan', amended: 'Perubahan', answered: 'Terjawab', request: 'Permintaan untuk penyingkapan', published: 'Penyingkapan Data'},
+      en: {scheduled: 'Scheduled', amended: 'Amended', answered: 'Answered', request: 'Request for Disclosure', published: 'Disclosure', market_watch: 'Market Watch'},
+      ko: {scheduled: '예약', amended: '정정', answered: '답변 완료', request: '조회', published: '공시', market_watch: '마켓 워치'},
+      cn: {scheduled: '预订', amended: '更正', answered: '已回答', published: '公布', market_watch: '市场观察'},
+      jp: {scheduled: '予約', amended: '修正済み', answered: '回答済み', published: '公開', market_watch: 'マーケットウォッチ'},
+      ru: {scheduled: 'По расписанию', amended: 'оригинал', answered: 'Отвеченный', request: 'Запрос о раскрытии', published: 'раскрытие', market_watch: 'Обзор рынка'},
+      id: {scheduled: 'Direncanakan', amended: 'Perubahan', answered: 'Terjawab', request: 'Permintaan untuk penyingkapan', published: 'Penyingkapan Data', market_watch: 'Pantauan Pasar'},
     };
     var TRANSLATION_MAP = {
       en: {no_disclosures: function(n) {return 'No disclosures published in the last '.concat(n, ' days.')}, no_match: 'No disclosures matched the project'},
@@ -109,7 +110,7 @@ var API_PATH = 'https://api.xangle.io/external/';
         getProjectDisclosures(null, args.projectSymbols);
       } else {
         var ids = args.whiteList ? symbolsToIds(args.whiteList) : null;
-        getAllDisclosures(ids);
+        getWholeDisclosures(ids);
       }
 
       _calls.push({f: applyLogo, v: _config.hideLogo});
@@ -123,10 +124,11 @@ var API_PATH = 'https://api.xangle.io/external/';
     window.addEventListener('resize', onHandleResize);
     ////////////////////////////////////////////////////////
     
-    function getAllDisclosures(project_ids) {
+    function getWholeDisclosures(project_ids) {
       var url = API_PATH + 'disclosure-list';
       url += '?lang=' + _config.language + '&status=' + _config.status;
       if (Array.isArray(project_ids) && project_ids.length) url += '&white_list=' + project_ids.toString();
+      if (_config.hasOwnProperty('market_watch')) url += '&market_watch=' + _config.market_watch;
 
       __request__(url, function(data) {
         if (!data || !data.disclosures || data.disclosures.length == 0) {
@@ -435,7 +437,6 @@ var API_PATH = 'https://api.xangle.io/external/';
     }
 
     function __request__(url, callback) {
-
       try {
         var xhr = new XMLHttpRequest;
         xhr.open('GET', url, true);
@@ -484,6 +485,7 @@ var API_PATH = 'https://api.xangle.io/external/';
         else if (obj.disclosure_type == 'request') return STATE_MAP[lang]['request'];
         else if (obj.disclosure_type == 'response') return STATE_MAP[lang]['answered'];
         else if (obj.disclosure_type == 'amendment') return STATE_MAP[lang]['amended'];
+        else if (obj.disclosure_type == 'market_watch') return STATE_MAP[lang]['market_watch'];
         return STATE_MAP[lang]['published'];
       }
 
@@ -542,7 +544,8 @@ var API_PATH = 'https://api.xangle.io/external/';
         var d = disclosures[i];
         var badge = d.publish_status != 'scheduled' && duration(d.publish_timestamp_utc, newTagDuration) ? "<span class='new-badge'>new</span>" : "";
         var logo = "<img class='logo' src=\'" + d.project_logo + "\'/><span class='symbol'>" + d.project_symbol + "</span><div class='divider'></div>"; 
-        var title = "<span class='content'>" + (d.publish_status != 'scheduled' ? d.title : '- : - : -') + "</span>";
+        if (d.disclosure_type == 'market_watch') logo = ''
+        var title = "<span class='content"+ (d.disclosure_type == 'market_watch' ? ' no-project' : '') +"'>" + (d.publish_status != 'scheduled' ? d.title : '- : - : -') + "</span>";
 
         if (MOBILE_DEVICE) {
           itemHTML += "<div class='ticker-item vertical' id='" + d.disclosure_id + "' target='_blank'>"

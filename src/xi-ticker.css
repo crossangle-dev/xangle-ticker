@@ -153,6 +153,9 @@
   overflow-x: hidden;  
   text-overflow: ellipsis;
 }
+.ticker-item .content.no-project {
+  max-width: 330px;
+}
 .ticker-item .logo {
   margin-left: 5px;
   min-width: 12px;
