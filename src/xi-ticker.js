@@ -1,6 +1,7 @@
 'use strict';
 
 var API_PATH = 'https://api.xangle.io/external/';
+// var API_PATH = 'https://test.xangle.io:5000/external/';
 
 (function(_h) {
 
@@ -128,7 +129,7 @@ var API_PATH = 'https://api.xangle.io/external/';
       var url = API_PATH + 'disclosure-list';
       url += '?lang=' + _config.language + '&status=' + _config.status;
       if (Array.isArray(project_ids) && project_ids.length) url += '&white_list=' + project_ids.toString();
-      if (_config.hasOwnProperty('market_watch')) url += '&market_watch=' + _config.market_watch;
+      if (_config.hasOwnProperty('marketWatch')) url += '&market_watch=' + _config.marketWatch;
 
       __request__(url, function(data) {
         if (!data || !data.disclosures || data.disclosures.length == 0) {
