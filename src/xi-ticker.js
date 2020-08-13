@@ -53,6 +53,7 @@ var API_PATH = 'https://api.xangle.io/external/';
     var SUPPORT_LANGUAGE = ['en', 'ko', 'jp', 'cn', 'ru', 'id'];
     var SPEED_FACTOR = {1: 30, 2: 40, 3: 60, 4: 100, 5: 200};
     var LAP_FACTOR = {2: 5, 3: 8, 4: 11, 5: 14, 10: 28, 15: 43};
+    var TICKER_IMAGE_PATH = 'https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images';
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     // private methods (explicit hoisting to be used to call by public methods)
@@ -74,11 +75,11 @@ var API_PATH = 'https://api.xangle.io/external/';
 
       var layout = '', header = '';
       if (MOBILE_DEVICE) {
-        header = "<div class='xt-head' target='_blank'><img src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/favicon.svg'/>";
+        header = "<div class='xt-head' target='_blank'><img src='" + TICKER_IMAGE_PATH + "'/>";
         layout = "<div class='xt-layout mobile'>" + header + "</div><div class='xt-tail'></div></div>";
       } else {
         header = "<div class='xt-head' target='_blank'><div>"
-        var logo = "<img src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/ticker-logo" + (_config.darkMode ? '-dark.svg' : '.svg') + "'/>";
+        var logo = "<img src='" + TICKER_IMAGE_PATH + "/ticker-logo" + (_config.darkMode ? '-dark.svg' : '.svg') + "'/>";
         layout = "<div class='xt-layout'>" + header + logo + "</div></div><div class='xt-tail'></div></div>";
       }
       cn.innerHTML = layout;
@@ -474,10 +475,10 @@ var API_PATH = 'https://api.xangle.io/external/';
       var layoutHTML = '';
       if (MOBILE_DEVICE) {
         var moveClass = "'ticker-move vertical" + (disclosures.length <= 1 ? '' : ' v-ticker-' + disclosures.length) + "'";
-        var logo = "<img class='logo' src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/favicon.svg'/>";
+        var logo = "<img class='logo' src='" + TICKER_IMAGE_PATH + "/favicon.svg'/>";
         layoutHTML = "<div class='xt-layout mobile'><div class='xt-head' target='_blank'>"+ logo +"</div><div class='xt-tail'><div class='ticker-wrap vertical'><div class="+ moveClass +">";
       } else {
-        var logo = "<img class='logo' src='https://s3.ap-northeast-2.amazonaws.com/service.xangle.io/ticker/images/ticker-logo" + (_config.darkMode ? '-dark.svg' : '.svg') + "'/>";
+        var logo = "<img class='logo' src='" + TICKER_IMAGE_PATH + "/ticker-logo" + (_config.darkMode ? '-dark.svg' : '.svg') + "'/>";
         layoutHTML = "<div class='xt-layout'><div class='xt-head' target='_blank'><div>"+ logo +"</div></div><div class='xt-tail'><span class='left-fade'></span><span class='right-fade'></span><div class='ticker-wrap fixed'><div class='ticker-move paused fixed desktop'>";
       }
   
@@ -545,7 +546,7 @@ var API_PATH = 'https://api.xangle.io/external/';
         var d = disclosures[i];
         var badge = d.publish_status != 'scheduled' && duration(d.publish_timestamp_utc, newTagDuration) ? "<span class='new-badge'>new</span>" : "";
         var logo = "<img class='logo' src=\'" + d.project_logo + "\'/><span class='symbol'>" + d.project_symbol + "</span><div class='divider'></div>"; 
-        if (d.disclosure_type == 'market_watch') logo = ''
+        if (d.disclosure_type == 'market_watch') logo = "<img class='logo' src=\'" + d.flag_url + "\'/>"
         var title = "<span class='content"+ (d.disclosure_type == 'market_watch' ? ' no-project' : '') +"'>" + (d.publish_status != 'scheduled' ? d.title : '- : - : -') + "</span>";
 
         if (MOBILE_DEVICE) {
