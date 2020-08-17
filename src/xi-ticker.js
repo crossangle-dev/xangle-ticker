@@ -75,7 +75,7 @@ var API_PATH = 'https://api.xangle.io/external/';
 
       var layout = '', header = '';
       if (MOBILE_DEVICE) {
-        header = "<div class='xt-head' target='_blank'><img src='" + TICKER_IMAGE_PATH + "'/>";
+        header = "<div class='xt-head' target='_blank'><img src='" + TICKER_IMAGE_PATH + "/favicon.svg'/>";
         layout = "<div class='xt-layout mobile'>" + header + "</div><div class='xt-tail'></div></div>";
       } else {
         header = "<div class='xt-head' target='_blank'><div>"
