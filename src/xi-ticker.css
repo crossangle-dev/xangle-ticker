@@ -32,25 +32,32 @@
 .xt-head > div {
   border-right: 1px solid #eeeeee;
   height: 18px;
+  display: flex;
+  align-items: center;
 }
 .xt-head.dark > div  {
   border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 .xt-head .logo {
   width: 92px;
-  height: 18px;
-  vertical-align: inherit !important;
+  height: 12px;
 }
 .xt-tail {
   width: inherit;
   overflow: hidden;
 }
 .xt-tail.no-message {
-  text-align: center;
   font-weight: bold;
   font-size: 12px;
   padding: 12px 0;
   background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.xt-tail.no-message.dark {
+  background-color:#131721;
+  color: #ffffff;
 }
 .xt-tail .left-fade {
   width: 48px;
@@ -152,16 +159,15 @@
   max-width: 300px;
   overflow-x: hidden;  
   text-overflow: ellipsis;
+  height: 18px !important;
 }
 .ticker-item .content.no-project {
   max-width: 320px;
 }
 .ticker-item .logo {
   margin-left: 5px;
-  min-width: 12px;
-  max-width: 12px;
-  min-height: 12px;
-  max-height: 12px;
+  width: 12px;
+  height: 12px;
   vertical-align: middle;
 }
 .ticker-item .new-badge {
@@ -263,6 +269,7 @@
 }
 .ticker-item.vertical .content {
   max-width: calc(100vw - 108px);
+  height: inherit !important;
 }
 .ticker-move.v-ticker-15 {
   top: 294px;

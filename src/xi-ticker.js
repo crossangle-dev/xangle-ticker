@@ -1,7 +1,7 @@
 'use strict';
 
 var API_PATH = 'https://api.xangle.io/external/';
-// var API_PATH = 'https://test.xangle.io:5000/external/';
+//var API_PATH = 'http://localhost:5000/external/';
 
 (function(_h) {
 
@@ -24,7 +24,10 @@ var API_PATH = 'https://api.xangle.io/external/';
       scrollSpeed: 3,  // (slow) 1 ~ 5 (fast)
       projectSymbols: null, // array|string
       apiUrl: null,
-      marketWatch: 'partial' // 'whole'
+      marketWatch: 'partial' // 'whole',
+      showPrice: false,
+      backgroundColor: '#ffffff',
+      forgroundColor: '#00000'
       */
     };
     var DISCLOSURE_NUMBER = 0; // number of displaying disclosures
@@ -75,11 +78,11 @@ var API_PATH = 'https://api.xangle.io/external/';
 
       var layout = '', header = '';
       if (MOBILE_DEVICE) {
-        header = "<div class='xt-head' target='_blank'><img src='" + TICKER_IMAGE_PATH + "/favicon.svg'/>";
+        header = "<div class='xt-head' target='_blank'><img class='logo' src='" + TICKER_IMAGE_PATH + "/favicon.svg'/>";
         layout = "<div class='xt-layout mobile'>" + header + "</div><div class='xt-tail'></div></div>";
       } else {
         header = "<div class='xt-head' target='_blank'><div>"
-        var logo = "<img src='" + TICKER_IMAGE_PATH + "/ticker-logo" + (_config.darkMode ? '-dark.svg' : '.svg') + "'/>";
+        var logo = "<img class='logo' src='" + TICKER_IMAGE_PATH + "/ticker-logo" + (_config.darkMode || _config.whiteLogo ? '-dark.svg' : '.svg') + "'/>";
         layout = "<div class='xt-layout'>" + header + logo + "</div></div><div class='xt-tail'></div></div>";
       }
       cn.innerHTML = layout;
@@ -89,9 +92,16 @@ var API_PATH = 'https://api.xangle.io/external/';
         if (target) {
           target.innerText = _translate(message);
           target.classList.add('no-message');
+          if (_config.darkMode) target.classList.add('dark');
+          if (_config.backgroundColor) target.style.backgroundColor = _config.backgroundColor;
+          if (_config.foregroundColor) target.style.color = _config.foregroundColor;
         }
         var header = __element__('xt-head');
-        header && header.addEventListener('click', function() { window.open("https://xangle.io", "_blank") });
+        if (header) {
+          header.addEventListener('click', function() { window.open("https://xangle.io", "_blank") });
+          if (_config.darkMode) header.classList.add('dark')
+          if (_config.backgroundColor) header.style.backgroundColor = _config.backgroundColor;
+        }
       }, 10)
     }
 
@@ -115,10 +125,16 @@ var API_PATH = 'https://api.xangle.io/external/';
         getWholeDisclosures(ids);
       }
 
+      var hasDarkMode = args.hasOwnProperty('darkMode')
       _calls.push({f: applyLogo, v: _config.hideLogo});
-      args.hasOwnProperty('darkMode') && _calls.push({f: applyMode, v: args.darkMode});
+      hasDarkMode && _calls.push({f: applyMode, v: args.darkMode});
       args.hasOwnProperty('tickerWidth') && _calls.push({f: applyWidth, v: args.tickerWidth});
       args.hasOwnProperty('tickerStyle') && _calls.push({f: applyStyle, v: args.tickerStyle});
+
+      if (!hasDarkMode || !args.darkMode) {
+        args.hasOwnProperty('backgroundColor') && _calls.push({f: applyBgColor, v: args.backgroundColor});
+        args.hasOwnProperty('foregroundColor') && _calls.push({f: applyFgColor, v: args.foregroundColor});
+      }
     }
 
     ////////////////////////////////////////////////////////
@@ -136,7 +152,7 @@ var API_PATH = 'https://api.xangle.io/external/';
         if (!data || !data.disclosures || data.disclosures.length == 0) {
           return _handleError('show', 'no_disclosures');
         }
-        __generator__(limitedDisclosures(data.disclosures));
+        __generator__(limitedDisclosures(data.disclosures, false));
       })
     }
 
@@ -161,7 +177,7 @@ var API_PATH = 'https://api.xangle.io/external/';
         for (var i = 0; i < data.length; i++) {
           items = items.concat(data[i].disclosures);
         }
-        __generator__(limitedDisclosures(items));
+        __generator__(limitedDisclosures(items, true));
       })
     }
 
@@ -170,7 +186,7 @@ var API_PATH = 'https://api.xangle.io/external/';
         if (!data || data.length == 0) {
           return _handleError('show', 'no_disclosures')
         }
-        __generator__(limitedDisclosures(data));
+        __generator__(limitedDisclosures(data, false));
       })
     }
 
@@ -196,6 +212,7 @@ var API_PATH = 'https://api.xangle.io/external/';
         limit: MOBILE_DEVICE ? 10 : 15,
         display: 'link',
         scrollSpeed: 3,
+        showPrice: false,
         projectIds: null,
         projectSymbols: null
       }
@@ -221,16 +238,23 @@ var API_PATH = 'https://api.xangle.io/external/';
       }
     }
 
-    function limitedDisclosures(disclosures) {
+    function limitedDisclosures(disclosures, isNeedSort) {
       var items = [];
       var duration = _config.disclosureDuration, limitation = _config.limit;
-      
+           
       var now = __miliseconds__(), range = 86400000 * duration;
       for (var i = 0; i < disclosures.length; i++) {
         var item = disclosures[i];
         if (!item.publish_timestamp_utc) continue;
         var one = __utctime__(item.publish_timestamp_utc);
-        if (now - one <= range) items.push(item);
+        if (now - one <= range) {
+          item.mili_time = one;
+          items.push(item);
+        }
+      }
+
+      if (isNeedSort) {
+        items = items.sort(function(a, b) { return b.mili_time - a.mili_time })
       }
 
       function _limit(items, count) {
@@ -311,6 +335,27 @@ var API_PATH = 'https://api.xangle.io/external/';
       }
     }
 
+    function applyBgColor(color) {
+       // bc: .xt-container, .xt-head
+       var bgClasses = ['xt-container', 'xt-head'];
+       for (var j = 0; j < bgClasses.length; j++) {
+         var el = __element__(bgClasses[j]);
+         el && (el.style.backgroundColor = color);
+       }
+       hideFader()
+    }
+
+    function applyFgColor(color) {
+      // fc: .ticker-item, .state
+      var tickerItems = __element__('ticker-item', 'all');
+      for (var i = 0; i < tickerItems.length; i++) {
+        var item = tickerItems[i];
+        item && (item.style.color = color);
+        var st = __element__('state', item);
+        st && (st.style.color = color);
+      }
+    }
+
     function applyLogo(hideLogo) {
       var layout = __element__('xt-layout'), head = __element__('xt-head');
       if (!layout || !head) return _handleError('hide', 'failed to hide xangle logo');
@@ -385,6 +430,7 @@ var API_PATH = 'https://api.xangle.io/external/';
 
       var containerWidth = parseInt(window.getComputedStyle(_container, null).getPropertyValue("width")) || MAX_WIDTH;
       var moverCalcWidth = mover.clientWidth - Math.ceil(containerWidth * 0.50), tailWidth = tail.clientWidth;
+      console.log('calc', moverCalcWidth, tailWidth)
       if (moverCalcWidth < tailWidth) {
         playAnimation('pause');
         hideFader();
@@ -475,10 +521,11 @@ var API_PATH = 'https://api.xangle.io/external/';
       var layoutHTML = '';
       if (MOBILE_DEVICE) {
         var moveClass = "'ticker-move vertical" + (disclosures.length <= 1 ? '' : ' v-ticker-' + disclosures.length) + "'";
-        var logo = "<img class='logo' src='" + TICKER_IMAGE_PATH + "/favicon.svg'/>";
+        var logo = "<img class='logo' alt='logo' src='" + TICKER_IMAGE_PATH + "/favicon.svg'/>";
         layoutHTML = "<div class='xt-layout mobile'><div class='xt-head' target='_blank'>"+ logo +"</div><div class='xt-tail'><div class='ticker-wrap vertical'><div class="+ moveClass +">";
       } else {
-        var logo = "<img class='logo' src='" + TICKER_IMAGE_PATH + "/ticker-logo" + (_config.darkMode ? '-dark.svg' : '.svg') + "'/>";
+        var logo_img = (_config.darkMode || _config.whiteLogo) ? '-dark.svg' : '.svg'
+        var logo = "<img class='logo' alt='logo' src='" + TICKER_IMAGE_PATH + "/ticker-logo" + logo_img + "'/>";
         layoutHTML = "<div class='xt-layout'><div class='xt-head' target='_blank'><div>"+ logo +"</div></div><div class='xt-tail'><span class='left-fade'></span><span class='right-fade'></span><div class='ticker-wrap fixed'><div class='ticker-move paused fixed desktop'>";
       }
   
@@ -494,51 +541,6 @@ var API_PATH = 'https://api.xangle.io/external/';
       function duration(timestamp, _duration) {
         var now = __miliseconds__(), range = 86400000 * _duration, one = __utctime__(timestamp);
         return now - one <= range;
-      }
-
-      function interval(timestamp) {
-        var now = __miliseconds__(), one = __utctime__(timestamp);
-        return Math.floor((one - now) / 1000);
-      }
-
-      function runSchedule(item, interval) {
-        return setInterval(function() {
-          interval--;
-          var h = Math.floor(interval / 3600), m = Math.floor((interval % 3600) / 60), s = Math.floor((interval % 3600) % 60);
-          var content = __element__('content', item);
-          if (content) content.innerText = (h < 10 ? '0' + h : h) + " : " + (m < 10 ? '0' + m : m) + " : " + (s < 10 ? '0' + s : s);
-          if (interval <= 0) stopSchedule(item, content);
-        }, 1000)
-      }
-
-      function stopSchedule(item, content) {
-        clearInterval(item.getAttribute('runner'));
-        content.innerText = '00 : 00 : 00';
-
-        var counter = 0;
-        var published = setInterval(function() {
-          geteDisclosureInfo(item.getAttribute('id'), function(data) {
-            if (data) {
-              clearInterval(published);
-              if (typeof data != 'object' || !data.hasOwnProperty('title')) {
-                content.innerText = 'No disclosure information';
-                return;  
-              }
-              content.innerText = data.title;
-              
-              if (MOBILE_DEVICE) {
-                item.insertAdjacentHTML("beforeend", "<span class='new-badge'>new</span>");
-              } else {
-                var st = __element__('state', item);
-                st.innerText = '[' + state(data, _config.language) + ']';
-                var box = __element__('boxer', item);
-                box.insertAdjacentHTML("beforeend", "<span class='new-badge'>new</span>");
-              }
-            } else if (++counter >= 10) {
-              clearInterval(published);
-            }
-          })
-        }, 3000);
       }
       
       var itemHTML = '', lang = _config.language, newTagDuration = _config.newTagDuration;
@@ -571,10 +573,6 @@ var API_PATH = 'https://api.xangle.io/external/';
         if (!item) continue;
 
         item.addEventListener('click', openDisclosure(args));
-        if (d.publish_status == 'scheduled') {
-          var runner = runSchedule(item, interval(d.publish_timestamp_utc));
-          item.setAttribute('runner', runner);
-        }
       }
       __apply__();
     }
